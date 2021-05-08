@@ -39,6 +39,7 @@ For Minecraft Java Edition you'll need to use this image instead:
 - `GID` (default derived from `/data` owner) : can be set to a specific group ID to run the
   bedrock server process
 - `PACKAGE_BACKUP_KEEP` (`2`) : how many package backups to keep
+- `WORLD` : Specify a URL or path to a ZIP file containing an archvied world. File will be downloaded, unzipped, and the subdirectory containing `level.dat` will be moved to `/data/world/$LEVEL_NAME` where `$LEVEL_NAME` defaults to `'Bedrock level'` `WORLD` can also be a specified path to a directory where the contents of the directory will be copied over to `/data/world/$LEVEL_NAME`. NOTE: If the archive contains more than one level.dat, then the one to select can be picked with `WORLD_INDEX`, which defaults to 1.
 
 ### Server Properties
 
@@ -80,7 +81,6 @@ docker run -d -it --name bds-flat-creative \
 
 - **UDP** 19132 : the Bedrock server port. 
   **NOTE** that you must append `/udp` when exposing the port, such as `-p 19132:19132/udp`
-  
 ## Volumes
 
 - `/data` : the location where the downloaded server is expanded and ran. Also contains the

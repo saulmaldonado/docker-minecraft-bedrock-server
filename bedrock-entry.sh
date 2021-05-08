@@ -115,6 +115,52 @@ if [ ! -f "bedrock_server-${VERSION}" ]; then
   mv bedrock_server bedrock_server-${VERSION}
 fi
 
+# Copies WORLD into world level directory
+: ${LEVEL_NAME:="Bedrock level"}
+
+worldDest=/data/worlds/$LEVEL_NAME
+
+if [[ "$WORLD" ]] && [ ! -d "$worldDest" ]; then
+  if [[ ${WORLD:0:8} == "https://" || ${WORLD:0:7} == "http://" || ${WORLD:0:6} == "ftp://" ]] ; then
+    curl -fsSL "$WORLD" -o /tmp/world.zip
+    zipSrc=/tmp/world.zip
+  elif [[ "$WORLD" =~ .*\.zip ]]; then
+    zipSrc="$WORLD"
+  fi
+
+  if [[ "$zipSrc" ]]; then
+    echo "Unzipping world"
+
+    # Stage contents so that the correct subdirectory can be picked off
+    mkdir -p /tmp/world-data
+    (cd /tmp/world-data && unzip -o -q "$zipSrc")
+
+    baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
+
+    count=$(echo "$baseDirs" | wc -l)
+    if [[ $count -gt 1 ]]; then
+      baseDir="$(echo "$baseDirs" | sed -n ${WORLD_INDEX:-1}p)"
+      baseName=$(basename "$baseDir")
+      echo "WARN multiple levels found, picking: $baseName"
+    elif [[ $count -gt 0 ]]; then
+      baseDir="$baseDirs"
+    else
+      echo "ERROR invalid world content"
+      exit 1
+    fi
+
+    # Copy into selected world directory 
+    mkdir -p "$worldDest"
+    rsync --remove-source-files --recursive --delete "$baseDir/" "$worldDest"
+  else
+    echo "Cloning world directory from $WORLD ..."
+
+    # Copy into selected world directory 
+    mkdir -p "$worldDest"
+    rsync --recursive --delete "${WORLD%/}"/ "$worldDest"
+  fi
+fi
+
 if [ -n "$OPS" ] || [ -n "$MEMBERS" ] || [ -n "$VISITORS" ]; then
   echo "Updating permissions"
   jq -n --arg ops "$OPS" --arg members "$MEMBERS" --arg visitors "$VISITORS" '[

@@ -10,6 +10,8 @@ RUN apt-get update && \
     curl \
     unzip \
     jq \
+    unzip \
+    rsync \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
