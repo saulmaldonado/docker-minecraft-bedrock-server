@@ -189,5 +189,14 @@ set-property --file server.properties --bulk /etc/bds-property-definitions.json
 
 export LD_LIBRARY_PATH=.
 
+: ${RCON_ENABLED:=TRUE}
+: ${RCON_PASSWORD:=minecraft}
+: ${RCON_PORT:=25575}
+
 echo "Starting Bedrock server..."
-exec ./bedrock_server-${VERSION}
+
+if [[ ${RCON_ENABLED^^} == TRUE ]]; then
+  exec mc-bedrock-runner --port=${RCON_PORT} --password=${RCON_PASSWORD} ./bedrock_server-${VERSION}
+else
+  exec ./bedrock_server-${VERSION}
+fi

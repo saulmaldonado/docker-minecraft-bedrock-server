@@ -40,6 +40,9 @@ For Minecraft Java Edition you'll need to use this image instead:
   bedrock server process
 - `PACKAGE_BACKUP_KEEP` (`2`) : how many package backups to keep
 - `WORLD` : Specify a URL or path to a ZIP file containing an archvied world. File will be downloaded, unzipped, and the subdirectory containing `level.dat` will be moved to `/data/world/$LEVEL_NAME` where `$LEVEL_NAME` defaults to `'Bedrock level'` `WORLD` can also be a specified path to a directory where the contents of the directory will be copied over to `/data/world/$LEVEL_NAME`. NOTE: If the archive contains more than one level.dat, then the one to select can be picked with `WORLD_INDEX`, which defaults to 1.
+- `ENABLE_RCON` : Enables RCON minecraft servers wrapper. Defaults to `true`
+- `RCON_PASSWORD` : Specifies RCON server password if enabled. Defaults to `minecraft`
+- `RCON_PORT` : Specifices RCON server port if enabled. Defaults to `25575`
 
 ### Server Properties
 

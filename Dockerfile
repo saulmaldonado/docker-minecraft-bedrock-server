@@ -7,13 +7,13 @@ ARG APT_UPDATE=20210112
 
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    curl \
-    unzip \
-    jq \
-    unzip \
-    rsync \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+  curl \
+  unzip \
+  jq \
+  unzip \
+  rsync \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 19132/udp
 
@@ -35,6 +35,8 @@ RUN easy-add --var version=1.2.0 --var app=restify --file {{.app}} --from https:
 
 RUN easy-add --var version=0.5.0 --var app=mc-monitor --file {{.app}} --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_linux_${ARCH}.tar.gz
 
+RUN easy-add --var version=v0.2.0 --var app=mc-bedrock-runner --file {{.app}} --from https://github.com/saulmaldonado/{{.app}}/releases/download/{{.version}}/{{.app}}.tar.gz
+
 COPY *.sh /opt/
 
 COPY property-definitions.json /etc/bds-property-definitions.json
@@ -45,6 +47,9 @@ COPY property-definitions.json /etc/bds-property-definitions.json
 # https://minecraft.gamepedia.com/Bedrock_Edition_1.13.0
 # https://minecraft.gamepedia.com/Bedrock_Edition_1.14.0
 ENV VERSION=LATEST \
-    SERVER_PORT=19132
+  SERVER_PORT=19132 \
+  RCON_ENABLED=true \
+  RCON_PASSWORD=minecraft \
+  RCON_PORT=25575
 
 HEALTHCHECK --start-period=1m CMD /usr/local/bin/mc-monitor status-bedrock --host 127.0.0.1 --port $SERVER_PORT
