@@ -35,7 +35,7 @@ RUN easy-add --var version=1.2.0 --var app=restify --file {{.app}} --from https:
 
 RUN easy-add --var version=0.5.0 --var app=mc-monitor --file {{.app}} --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_linux_${ARCH}.tar.gz
 
-RUN easy-add --var version=v0.2.0 --var app=mc-bedrock-runner --file {{.app}} --from https://github.com/saulmaldonado/{{.app}}/releases/download/{{.version}}/{{.app}}.tar.gz
+RUN easy-add --var version=v0.3.0 --var app=mc-bedrock-runner --file {{.app}} --from https://github.com/saulmaldonado/{{.app}}/releases/download/{{.version}}/{{.app}}.tar.gz
 
 COPY *.sh /opt/
 
